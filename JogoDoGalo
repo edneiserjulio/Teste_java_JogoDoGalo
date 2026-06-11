@@ -1,0 +1,101 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class JogoGalo {
+    private JFrame janela; // declaramos as variaveis privadas
+    private String jogadorAtual = "X"; // declaramos as variaveis privadas
+    private JButton[] botoesTabuleiro = new JButton[9];
+    private JLabel labelScore1; // declaramos as variaveis privadas
+    private JLabel labelScore2; // declaramos as variaveis privadas
+    private int pontosP1 = 0;// declaramos as variaveis privadas
+    private int pontosP2 = 0; // declaramos as variaveis privadas
+
+    public JogoGalo() {
+        janela = new JFrame("Jogo do galo"); // atribuimos o nome da janela o nome jogo galo
+        janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Configuração do painel central das grelhas ou bem dizer do tabuleiro
+        JPanel painelTabuleiro = new JPanel(new GridLayout(3, 3)); // Começamos a definir o tamanho das GridLayout e as suas divisoes
+        for (int i = 0; i < 9; i++) {  // iniciamos o ciclo que começa de zero a 9
+            botoesTabuleiro[i] = new JButton(""); // Os quadrados estarão sem nada e vai criar um novo botao
+            botoesTabuleiro[i].setFont(new Font("Arial", Font.BOLD, 40)); // Começamos a declarar o tamanho do tipo de letra
+            botoesTabuleiro[i].setBackground(Color.WHITE); // Fundo sempre branco
+            botoesTabuleiro[i].setFocusPainted(false);
+
+            botoesTabuleiro[i].addActionListener(e -> { // adicionamos a animação dos botoes no tabuleiro
+                JButton b = (JButton) e.getSource(); // Adicionamos o metodo getSoursce para descobrir qual foi o botao clicado
+                if (b.getText().equals("")) { // O equals Vai apenas aparecer quando o primeiro jogador jogar
+                    b.setText(jogadorAtual); //  Vai permitir qualquer um dos dois começar a jogar primeiro
+
+                    //  Mudanças de cores quando o utilizar clicar x vai aparecer azul e quando clicar O vai aprecer verde
+                    if (jogadorAtual.equals("X")) { // O primeiro jogador que jogar vai aparecer logo X
+                        b.setForeground(Color.BLUE); // X em Azul
+                        jogadorAtual = "O"; // O segundo a jogar vai aparecer o bola
+                    } else {
+                        // 0 em Verde (usei um verde mais escuro para melhor leitura)
+                        b.setForeground(new Color(0, 150, 0));
+                        jogadorAtual = "X";
+                    }
+                }
+            });
+            painelTabuleiro.add(botoesTabuleiro[i]); // terminamos por configurar os botoes
+        }
+
+        // PAINEL DA DIREITA (SCORE + BOTÕES) ---
+        JPanel painelDireita = new JPanel(new BorderLayout());
+        painelDireita.setBorder(BorderFactory.createTitledBorder("Score"));
+        painelDireita.setPreferredSize(new Dimension(160, 0));
+
+        JPanel painelLabels = new JPanel();
+        painelLabels.setLayout(new BoxLayout(painelLabels, BoxLayout.Y_AXIS));
+
+        labelScore1 = new JLabel("Player 1: " + pontosP1);
+        labelScore2 = new JLabel("Player 2:  " + pontosP2);
+        labelScore1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        labelScore2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        painelLabels.add(Box.createVerticalStrut(20));
+        painelLabels.add(labelScore1);
+        painelLabels.add(Box.createVerticalStrut(10));
+        painelLabels.add(labelScore2);
+
+        //configuração botão Prompt e new game
+        JPanel painelBotoes = new JPanel(new GridLayout(3, 1, 5, 5));
+        JButton b_reset = new JButton("Prompt");
+        JButton b_newGame = new JButton("New Game");
+
+        b_reset.addActionListener(e -> {
+            JOptionPane.showMessageDialog(janela,
+                    "Adicione neste código a contagem de pontos:\n" +
+                            "- Quando o jogador X jogar aumenta +1 no Player 1\n" +
+                            "- Quando o jogador O jogar aumenta +1 no Player 2\n" +
+                            "- Atualizar automaticamente os labels do score\n" +
+                            "- O botão New Game deve limpar apenas o tabuleiro."
+            );
+        });
+
+        b_newGame.addActionListener(e -> reiniciarJogo());
+
+        painelBotoes.add(b_reset); // adicionamos o botão Prompt ao painel dos botões
+        painelBotoes.add(b_newGame); // adicionamos o botão New Game ao painel dos botões
+        painelDireita.add(painelLabels, BorderLayout.NORTH); // adicionamos os labels do score no topo do painel lateral
+        painelDireita.add(painelBotoes, BorderLayout.SOUTH);// adicionamos os botões na parte inferior do painel lateral
+        // CONFIGURAÇÃO FINAL
+        Container c = janela.getContentPane();
+        c.setLayout(new BorderLayout()); // definimos o layout principal da janela
+        c.add(painelTabuleiro, BorderLayout.CENTER);// adicionamos o tabuleiro ao centro da janela
+        c.add(painelDireita, BorderLayout.EAST); // adicionamos o painel lateral à direita
+        janela.setSize(550, 450); // definimos o tamanho da janela
+        janela.setLocationRelativeTo(null); // abre a janela no centro do ecrã
+        janela.setVisible(true);
+    }
+    private void reiniciarJogo() {
+        for (JButton btn : botoesTabuleiro) {
+            btn.setText("");
+        }
+        jogadorAtual = "X";
+    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new JogoGalo());
+    }
+}
