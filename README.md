@@ -151,7 +151,7 @@ java JogoGalo
 
 Projeto desenvolvido para fins académicos e de aprendizagem da linguagem Java e da biblioteca Swing.
 
-**Autor:** [O teu nome]
+**Autor:** Edneiser Júlio
 
 ---
 
